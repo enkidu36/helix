@@ -19,7 +19,7 @@
          (d/div {:class "calendar-container"}
                 ($ library-component)
                 (d/div {:class "calendar-main"}
-                       (d/div {:class "calendar-date"} "Date Controls")
+                       (d/div {:class "calendar-date"} "Date ssssss")
                        (d/div {:class "calendar-date"}
                               (d/div {:class "week-controls"}
                                      (for [day ["Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"]]
