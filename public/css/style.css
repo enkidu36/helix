@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+  }
+  body {
+    background: #e4e4e4;
+    margin: 0;
+    font: 500 100% system-ui, sans-serif;
+  }
+
+  .page-main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page-header {
+    height: 40px;
+    background: rgb(48, 48, 48);
+    color: white
+  }
+
+  .calendar-main {
+    display: flex;
+    background: green;
+    flex-grow: 1 ;
+  }
+  
+  .calendar-container {
+    display: flex;
+    flex-grow: 8;
+    background: blue;
+  }
+
+  .calendar-side {
+    flex-grow: 0;
+    background: white;
+    visibility: show;
+
+  }
+  
+  .calendar-training {
+    flex-grow: 1;
+    background: orange;
+  }
+
+  .calendar-summary {
+    flex-grow: 1;
+    background: white;
+  }
+
+  .calendar-main {
+    flex-grow: 10;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .calendar-date {
+    display: flex;
+    background: cyan;
+  }
+
+  .calendar-body {
+    display: flex;
+    flex-grow: 1;
+  }
+  
+  .week-controls {
+    display: flex;
+    flex-grow: 3;
+    background: teal;
+  }
+
+  
+  .summary-controls {
+    display: flex;
+    min-width: 20px;
+    
+  }
+
+ .calendar-body-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 3;
+  }
+
+  .calendar-week-controls {
+    background: lightcoral;
+    min-width: 20px;
+  }
+
+  
+  .calendar-day {
+    display: flex;
+    background: grey;
+  }
+
+  .calendar-dates {
+    display: flex;
+    background: lightgray;
+    min-height: 100px;
+  }
+
+  .day {
+    flex-grow: 1;
+    text-align: center;
+    border: 1px solid white;
+    width: 50px;
+
+  }
+
+
+
+  
