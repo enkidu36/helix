@@ -6,7 +6,8 @@
 
 
  :dependencies
- [[lilactown/helix "0.1.8"]]
+ [[lilactown/helix "0.1.8"]
+  [rm-hull/monet "0.3.0"]]
 
  :dev-http {9000 "public"}
  :builds
