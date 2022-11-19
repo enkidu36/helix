@@ -1,10 +1,9 @@
-(ns pbranes.components.canvas
+(ns pbranes.component.canvas
   (:require [helix.core :refer [defnc]]
             [helix.hooks :as hooks]
             [helix.dom :as d]))
 
 (defnc canvas [{:keys [width height]}]
-
   (let [canvas-ref (hooks/use-ref nil)]
     (hooks/use-effect
      :always

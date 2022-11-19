@@ -1,7 +1,9 @@
 (ns pbranes.page.sandbox
-  (:require
-   [helix.core :refer [defnc $]]
-   [pbranes.components.canvas :refer [canvas]]))
+  (:require [helix.core :refer [$ <> defnc]]
+            [helix.dom :as d]
+            [pbranes.component.canvas :refer [canvas]]))
 
 (defnc sandbox []
-  ($ canvas {:width 800 :height 800}))
+  (<>
+   ($ canvas {:width 400 :height 400})
+   (d/div "hello")))
