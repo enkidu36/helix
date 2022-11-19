@@ -1,113 +1,48 @@
 * {
-    box-sizing: border-box;
-  }
-  body {
-    background: #e4e4e4;
-    margin: 0;
-    font: 500 100% system-ui, sans-serif;
-  }
+  box-sizing: border-box;
+}
 
-  .page-main {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+body {
+  background: #dac1c1;
+  margin: 0;
+  font: 500 100% system-ui, sans-serif;
+}
 
-  .page-header {
-    height: 40px;
-    background: rgb(48, 48, 48);
-    color: white
-  }
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: blue;
+  height: 100vh;
+}
 
-  .calendar-main {
-    display: flex;
-    background: green;
-    flex-grow: 1 ;
-  }
-  
-  .calendar-container {
-    display: flex;
-    flex-grow: 8;
-    background: blue;
-  }
+.wrapper > * {
+  padding: 20px;
+}
 
-  .calendar-side {
-    flex-grow: 0;
-    background: white;
-    visibility: show;
+.header {
+  display: flex;
+  flex: 0 0 40px;
+  align-items: center;
+  background: rgb(48, 48, 48);
+}
 
-  }
-  
-  .calendar-training {
-    flex-grow: 1;
-    background: orange;
-  }
+.header .nav {
+  display: flex;
+  gap: 10px;
+}
 
-  .calendar-summary {
-    flex-grow: 1;
-    background: white;
-  }
+.header a {
+  color: yellow;
+}
 
-  .calendar-main {
-    flex-grow: 10;
-    display: flex;
-    flex-direction: column;
-  }
+.main {
+  background: white;
+  flex: 1;
+}
 
-  .calendar-date {
-    display: flex;
-    background: cyan;
-  }
+.footer {
+  flex: 0 0 40px;
+  background: rgb(48, 48, 48);
+  color: yellow;
+}
 
-  .calendar-body {
-    display: flex;
-    flex-grow: 1;
-  }
-  
-  .week-controls {
-    display: flex;
-    flex-grow: 3;
-    background: teal;
-  }
-
-  
-  .summary-controls {
-    display: flex;
-    min-width: 20px;
-    
-  }
-
- .calendar-body-list {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 3;
-  }
-
-  .calendar-week-controls {
-    background: lightcoral;
-    min-width: 20px;
-  }
-
-  
-  .calendar-day {
-    display: flex;
-    background: grey;
-  }
-
-  .calendar-dates {
-    display: flex;
-    background: lightgray;
-    min-height: 100px;
-  }
-
-  .day {
-    flex-grow: 1;
-    text-align: center;
-    border: 1px solid white;
-    width: 50px;
-
-  }
-
-
-
-  
