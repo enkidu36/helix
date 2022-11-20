@@ -10,5 +10,5 @@
 
 (defnc sandbox []
   (<>
-   ($ canvas {:draw draw :width 200 :height 200})
-   (d/div "hello")))
+   ($ canvas {:draw draw :style { :width 200 :height 200  :background-color "lightgreen"}}
+      (d/div "hello"))))

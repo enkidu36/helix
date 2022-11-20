@@ -23,7 +23,7 @@
     (set! (.-width canvas) (* width ratio))
     (set! (.-height canvas) (* height ratio))))
 
-(defnc canvas [{:keys [draw width height]}]
+(defnc canvas [{:keys [draw style]}]
   (let [canvas-ref (hooks/use-ref nil)]
 
     (hooks/use-effect
@@ -31,10 +31,10 @@
      :once
      (let [canvas (.-current canvas-ref)
            context (.. canvas-ref -current (getContext "2d"))]
-       (adjust-canvas-ratio width height canvas)
+       (adjust-canvas-ratio (:width style) (:height style) canvas)
        (draw context)))
 
     (d/div
      (d/canvas {:id "canvas"
                 :ref canvas-ref
-                :style {:width width :height height :background-color "blue"}}))))
+                :style style}))))
