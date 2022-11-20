@@ -3,7 +3,12 @@
             [helix.dom :as d]
             [pbranes.component.canvas :refer [canvas]]))
 
+(defn draw [ctx]
+  (.beginPath ctx)
+  (.arc ctx 75 75 50 0 (* Math/PI 2) true)
+  (.stroke ctx))
+
 (defnc sandbox []
   (<>
-   ($ canvas {:width 400 :height 400})
+   ($ canvas {:draw draw :width 200 :height 200})
    (d/div "hello")))
