@@ -15,8 +15,9 @@
                 1)]
     (/ dpr bsr)) )
 
-(defn adjust-canvas-scale 
-  "Fixes canvas 2d Blur issue. https://medium.com/wdstack/fixing-html5-2d-canvas-blur-8ebe27db07da"
+(defn adjust-canvas-ratio
+  "This will scale the canvas properly and fixes canvas 2d Blur issue. 
+   https://medium.com/wdstack/fixing-html5-2d-canvas-blur-8ebe27db07da"
   [width height canvas]
   (let [ratio (PIXEL-RATIO (.getContext canvas "2d"))]
     (set! (.-width canvas) (* width ratio))
@@ -27,10 +28,10 @@
 
     (hooks/use-effect
      "Get the canvas context after it is rendered."
-     :always
+     :once
      (let [canvas (.-current canvas-ref)
            context (.. canvas-ref -current (getContext "2d"))]
-       (adjust-canvas-scale width height canvas)
+       (adjust-canvas-ratio width height canvas)
        (draw context)))
 
     (d/div
