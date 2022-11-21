@@ -36,7 +36,8 @@ body {
 }
 
 .main {
-  background: white;
+  background: rgb(48, 48, 96);
+  color: yellow;
   flex: 1;
 }
 

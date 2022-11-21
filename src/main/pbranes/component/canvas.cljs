@@ -1,7 +1,8 @@
 (ns pbranes.component.canvas
   (:require [helix.core :refer [defnc]]
             [helix.hooks :as hooks]
-            [helix.dom :as d]))
+            [helix.dom :as d]
+            [monet.canvas :as monet]))
 
 (set! *warn-on-infer* false)
 
@@ -18,21 +19,25 @@
 (defn adjust-canvas-ratio
   "This will scale the canvas properly and fixes canvas 2d Blur issue. 
    https://medium.com/wdstack/fixing-html5-2d-canvas-blur-8ebe27db07da"
+  
   [width height canvas]
-  (let [ratio (PIXEL-RATIO (.getContext canvas "2d"))]
+  (let [ctx (.getContext canvas "2d")
+        ratio (PIXEL-RATIO ctx)]
+    (js/console.log "PIXEL RATIO" ratio)
     (set! (.-width canvas) (* width ratio))
-    (set! (.-height canvas) (* height ratio))))
+    (set! (.-height canvas) (* height ratio))
+    (.setTransform ctx ratio 0 0 ratio 0 0)))
 
-(defnc canvas [{:keys [draw style]}]
+(defnc canvas-component [{:keys [draw style]}]
   (let [canvas-ref (hooks/use-ref nil)]
 
     (hooks/use-effect
      "Get the canvas context after it is rendered."
      :once
      (let [canvas (.-current canvas-ref)
-           context (.. canvas-ref -current (getContext "2d"))]
+           mc (monet/init canvas)]
        (adjust-canvas-ratio (:width style) (:height style) canvas)
-       (draw context)))
+       (draw mc)))
 
     (d/div
      (d/canvas {:id "canvas"
