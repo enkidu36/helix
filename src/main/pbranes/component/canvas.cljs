@@ -2,7 +2,8 @@
   (:require [helix.core :refer [defnc]]
             [helix.hooks :as hooks]
             [helix.dom :as d]
-            [monet.canvas :as monet]))
+            [monet.canvas :as monet]
+            [monet.canvas :as canvas]))
 
 (set! *warn-on-infer* false)
 
@@ -25,8 +26,7 @@
         ratio (PIXEL-RATIO ctx)]
     (js/console.log "PIXEL RATIO" ratio)
     (set! (.-width canvas) (* width ratio))
-    (set! (.-height canvas) (* height ratio))
-    (.setTransform ctx ratio 0 0 ratio 0 0)))
+    (set! (.-height canvas) (* height ratio))))
 
 (defnc canvas-component [{:keys [draw style]}]
   (let [canvas-ref (hooks/use-ref nil)]
@@ -34,9 +34,9 @@
     (hooks/use-effect
      "Get the canvas context after it is rendered."
      :once
-     (let [canvas (.-current canvas-ref)
-           mc (monet/init canvas)]
-       (adjust-canvas-ratio (:width style) (:height style) canvas)
+     (let [canvas-dom (.-current canvas-ref)
+           mc (monet/init canvas-dom)]
+       (adjust-canvas-ratio (:width style) (:height style) canvas-dom)
        (draw mc)))
 
     (d/div
