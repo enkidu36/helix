@@ -1,4 +1,4 @@
-#Math for Programmers Sandbox
+# Math for Programmers Sandbox
 
 Working through chapters and excecises in [Math for Programmer](https://www.manning.com/books/math-for-programmers?utm_source=google&utm_medium=cpc&utm_campaign=dynamicremarketing&gclid=EAIaIQobChMI_Lb1466v6AIVkkZeCh1HuwuNEAEYASACEgLgkvD_BwE)
 
