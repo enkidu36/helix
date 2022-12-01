@@ -110,28 +110,21 @@
      (-> ctx
          (canvas/restore)))))
 
-(defn make-grid-ctx [{:keys [canvas]}]
+(defn make-graph-ctx [{:keys [canvas]}]
   (let  [margin 50
-         partitions 10
+         partitions 4
          width (- (.-width canvas) (* 2 margin))
          height (- (.-height canvas) (* 2 margin))
          n (-> partitions (* 2) (+ 2))
          x-spacing (/ width n)
          y-spacing (/ height n)]
-    {:x 0 :y 0 :w width :h height :partitions partitions :n n :x-spacing x-spacing :y-spacing y-spacing}))
+    {:x 0 :y 0 :w width :h height :margin margin :partitions partitions :n n :x-spacing x-spacing :y-spacing y-spacing}))
 
-(defn draw-cartisian-graph [{:keys [canvas] :as mc}]
-  (let [margin 50
-        partitions 10
-        width (- (.-width canvas) (* 2 margin))
-        height (- (.-height canvas) (* 2 margin))
-        n (-> partitions (* 2) (+ 2))
-        x-spacing (/ width n)
-        y-spacing (/ height n)
-        graph-ctx {:x 0 :y 0 :w width :h height :partitions partitions :n n :x-spacing x-spacing :y-spacing y-spacing}]
+(defn draw-cartisian-graph [mc]
+  (let [ graph-ctx (make-graph-ctx mc)]
 
     (add-background mc "yellow")
-    (canvas/add-entity mc :start (start-translate-entity margin margin))
+    (canvas/add-entity mc :start (start-translate-entity (:margin graph-ctx) (:margin graph-ctx)))
     (add-grid-lines mc graph-ctx)
     (add-grid-marks mc graph-ctx)
     (add-axis mc graph-ctx)
