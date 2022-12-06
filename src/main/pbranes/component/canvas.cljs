@@ -1,8 +1,7 @@
 (ns pbranes.component.canvas
   (:require [helix.core :refer [defnc]]
             [helix.hooks :as hooks]
-            [helix.dom :as d]
-            [monet.canvas :as monet]))
+            [helix.dom :as d]))
 
 (set! *warn-on-infer* false)
 
