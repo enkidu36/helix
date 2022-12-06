@@ -105,25 +105,27 @@
 (defn get-background-color [background?]
   (if background? "rgba(80, 80, 80, 1.0)" "rgba(80, 80, 80, 0.0)"))
 
-(defn draw [mc graph-ctx]
-  (let [points (pce/calc-graph-points data graph-ctx)]
-
-    (canvas/add-entity mc :dino-poly (plot-polygon! points))
-    (canvas/add-entity mc :dino-pts (plot-points! points 2.5 "yellow"))))
+(defn draw [controls]
+  (fn [mc graph-ctx]
+    (let [points (pce/calc-graph-points data graph-ctx)]
+      (when (:lines? controls) (canvas/add-entity mc :dino-poly (plot-polygon! points)))
+      (when (:points? controls) (canvas/add-entity mc :dino-pts (plot-points! points 2.5 "yellow"))))))
 
 (defnc sandbox []
   (let [monet-canvas (hooks/use-ref nil)
-        [background set-background] (hooks/use-state true)]
+        [graph set-graph] (hooks/use-state {:points? true})]
 
-    (hooks/use-effect [background]
+    (hooks/use-effect [graph]
                       :always
                       (set! (.-current monet-canvas) (canvas/init (.getElementById js/document "canvas")))
                       (let [mc (.-current monet-canvas)
-                            render-fn (->canvas mc {:x 50 :y 50} (get-background-color background))]
-                        (render-fn (fn [mc] (draw-cartisian-graph mc draw)))))
+                            render-fn (->canvas mc {:x 50 :y 50} (get-background-color (:background? graph)) )]
+                        (render-fn (fn [mc] (draw-cartisian-graph mc (draw graph))))))
     (<>
-     ($ canvas-component {:class "canvas" :style {:width 400 :height 400 :color "lightgreen"}})
-     (d/button {:on-click #(set-background (not background))} "background"))))
+     ($ canvas-component {:id "canvas" :class "canvas" :style {:width 400 :height 400}})
+     (d/button {:on-click #(set-graph (assoc graph :background? (not (:background? graph))))} "background?")
+     (d/button {:on-click #(set-graph (assoc graph :lines? (not (:lines? graph))))} "lines?")
+     (d/button {:on-click #(set-graph (assoc graph :points? (not (:points? graph))))} "points?"))))
 
 
 

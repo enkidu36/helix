@@ -26,7 +26,7 @@
     (set! (.-width canvas) (* width ratio))
     (set! (.-height canvas) (* height ratio))))
 
-(defnc canvas-component [{:keys [style]}]
+(defnc canvas-component [{:keys [style id]}]
   (let [canvas-ref (hooks/use-ref nil)]
 
     (hooks/use-effect
@@ -36,6 +36,6 @@
        (adjust-canvas-ratio (:width style) (:height style) canvas-dom)))
 
     (d/div
-     (d/canvas {:id "canvas"
+     (d/canvas {:id id
                 :ref canvas-ref
                 :style style}))))
