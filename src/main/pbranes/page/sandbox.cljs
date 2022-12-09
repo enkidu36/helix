@@ -91,7 +91,9 @@
 
 (defnc sandbox []
   (let [monet-canvas (hooks/use-ref nil)
-        [graph set-graph] (hooks/use-state {:points? true})]
+        [graph set-graph] (hooks/use-state {:points? true
+                                            :lines? true
+                                            :background? true})]
 
     (hooks/use-effect [graph]
                       :always
