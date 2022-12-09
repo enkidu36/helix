@@ -41,6 +41,17 @@
      (-> ctx
          (canvas/restore)))))
 
+(defn rectangle [{:keys [x y w h]} color]
+  (canvas/entity
+   {:x x :y y :w w :h h}
+   (fn [value] value)
+   (fn [ctx val]
+     (-> ctx
+         (canvas/save)
+         (canvas/fill-style color)
+         (canvas/fill-rect val)
+         (canvas/restore)))))
+
 (defn line
   ([pt1 pt2] (line pt1 pt2 1 "black"))
   ([pt1 pt2 width color]
@@ -73,6 +84,34 @@
           (canvas/arc {:x x :y y :r r :start-angle 0 :end-angle (* 2 Math/PI) :conterclockwise true})
           (canvas/fill)
           (canvas/restore))))))
+
+(defn draw-line [ctx {:keys [x1 y1 x2 y2] }]
+  (-> ctx
+      (canvas/save)
+      (canvas/begin-path)
+      (canvas/stroke-cap "rounded")
+      (canvas/stroke-width 1)
+      (canvas/move-to (- x1 0.5) (- y1 0.5))
+      (canvas/line-to (- x2 0.5) (- y2 0.5))
+      (canvas/stroke)
+      (canvas/restore)))
+
+(defn xy-grid [{:keys [w h n]}]
+  (canvas/entity
+   {:w w :h h :n n}
+   (fn [value] value)
+   (fn [ctx {:keys [w h n]}]
+     (let [x-spacing (/ w n)
+           y-spacing (/ h n)]
+       (dotimes [i (+ n 1)]
+         (let [x (* i x-spacing)
+               y1 0
+               y2 h]
+           (draw-line ctx {:x1 x :y1 y1 :x2 x :y2 y2}))
+         (let [y (* i y-spacing)
+               x1 0
+               x2 w]
+           (draw-line ctx {:x1 x1 :y1 y :x2 x2 :y2 y})))))))
 
 (defn text [{:keys [text x y vert?] :or {vert? false}}]
   (canvas/entity
