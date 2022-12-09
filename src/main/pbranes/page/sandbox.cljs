@@ -46,7 +46,9 @@
 
 (defnc sandbox []
   (let [monet-canvas (hooks/use-ref nil)
-        [graph set-graph] (hooks/use-state {:points? true
+        [graph set-graph] (hooks/use-state {:width 400
+                                            :height 400
+                                            :points? true
                                             :lines? true
                                             :background? true
                                             :dino? true})
@@ -62,7 +64,7 @@
                           (draw-cartisian-center-graph mc margin bg-color (draw graph))
                           (draw-cartisian mc margin bg-color))))
     (<>
-     ($ canvas-component {:id "canvas" :class "canvas" :style {:width 400 :height 400}})
+     ($ canvas-component {:id "canvas" :class "canvas" :style {:width (:width graph) :height (:height graph)}})
      (make-toggle :background?)
      (make-toggle :lines?)
      (make-toggle :points?)
