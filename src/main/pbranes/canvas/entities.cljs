@@ -1,6 +1,9 @@
 (ns pbranes.canvas.entities
   (:require [monet.canvas :as canvas]))
 
+(defn make-monet-key [prefix]
+  (keyword (str prefix (gensym))))
+
 (defn calc-graph-pt [pt graph-ctx]
   (vector (* (:x-spacing graph-ctx) (first pt)) (* (:y-spacing graph-ctx) (second pt))))
 
@@ -112,6 +115,22 @@
                x1 0
                x2 w]
            (draw-line ctx {:x1 x1 :y1 y :x2 x2 :y2 y})))))))
+
+(defn xy-grid-new [{:keys [w h vert-lines horiz-lines spacing]}]
+  (canvas/entity
+   {:w w :h h :vert-lines vert-lines :horiz-lines horiz-lines :spacing spacing}
+   (fn [value] value)
+   (fn [ctx {:keys [w h vert-lines horiz-lines]}]
+     (dotimes [i (+ vert-lines 1)]
+       (let [x (* i spacing)
+             y1 0
+             y2 h]
+         (draw-line ctx {:x1 x :y1 y1 :x2 x :y2 y2})))
+     (dotimes [i (+ horiz-lines 1)]
+       (let [y (* i spacing)
+             x1 0
+             x2 w]
+         (draw-line ctx {:x1 x1 :y1 y :x2 x2 :y2 y}))))))
 
 (defn text [{:keys [text x y vert?] :or {vert? false}}]
   (canvas/entity

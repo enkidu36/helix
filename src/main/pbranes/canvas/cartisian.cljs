@@ -3,6 +3,7 @@
    [monet.canvas :as canvas]
    [pbranes.canvas.entities :as pce :refer [line rectangle text xy-grid]]))
 
+
 (defn add-background [mc color key]
   (canvas/add-entity
    mc key
@@ -45,7 +46,7 @@
       (canvas/add-entity mc :stop-draw (pce/stop-translate-entity)))))
 
 (defn ->canvas
-  ([mc] (->canvas mc nil nil))
+  ([mc] (->canvas mc 50 "white"))
   ([mc margin color]
    (fn [draw]
      (add-background mc color :background)

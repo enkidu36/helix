@@ -4,8 +4,9 @@
             [helix.hooks :as hooks]
             [monet.canvas :as canvas]
             [pbranes.canvas.cartisian :refer [->canvas cartisian-center-wrapper]]
-            [pbranes.canvas.entities :as pce :refer [plot-points! plot-polygon!]]
-            [pbranes.component.canvas :refer [canvas-component]]))
+            [pbranes.canvas.entities :as pce :refer [plot-points! plot-polygon! rectangle]]
+            [pbranes.component.canvas :refer [canvas-component]]
+            [pbranes.canvas.graph-tools :as gt]))
 
 (def dino-pts [[6 4] [3 1] [1 2] [-1 5] [-2 5] [-3 4]
                [-4 4] [-5 3] [-5 2] [-2 2] [-5 1] [-4 0] [-2 1]
@@ -31,27 +32,59 @@
       (when (:lines? controls) (canvas/add-entity mc :dino-poly (plot-polygon! points)))
       (when (:points? controls) (canvas/add-entity mc :dino-pts (plot-points! points 2.5 "yellow"))))))
 
+(defn make-toggle-button [graph set-fn key]
+  (d/button {:on-click #(set-fn (assoc graph key (not (key graph))))} (name key)))
+
 (defn draw-cartisian-center-graph [mc margin bg-color draw-fn]
   (let [render-fn (->canvas mc margin bg-color)
         graph-ctx (make-graph-ctx mc)
         make-cartisian (cartisian-center-wrapper mc)]
     (render-fn (fn [] (make-cartisian graph-ctx draw-fn)))))
 
-(defn draw-cartisian [mc margin bg-color]
-  (let [render-fn (->canvas mc margin bg-color)]
-    (render-fn nil)))
+(defn calc-spacing [mc domain range margin]
+  (let [chart-width (gt/get-chart-dimension mc margin false)
+        chart-height (gt/get-chart-dimension mc margin true)
+        x-spacing (gt/get-spacing chart-width (count domain))
+        y-spacing (gt/get-spacing chart-height (count range))]
+    (min x-spacing y-spacing)))
 
-(defn make-toggle-button [graph set-fn key]
-  (d/button {:on-click #(set-fn (assoc graph key (not (key graph))))} (name key)))
+(defn graph-context [mc]
+  (let [margin 50
+        coord-radius 4.7
+        domain (range 6 -40 -1)
+        range (range 6 -50 -1)
+        vert-lines ( count domain )
+        horiz-lines (count range)
+        spacing (calc-spacing mc domain range margin)
+        width  (-> domain (count) (* spacing) )
+        height (-> range (count) (* spacing))]
+    {:x 0 :y 0
+     :w width :h height
+     :margin margin
+     :coord-radius coord-radius
+     :partitions (count domain)
+     :vert-lines vert-lines :horiz-lines horiz-lines
+     :spacing spacing}
+    ))
+
+(defn graph-wrapper [mc]
+  (fn [graph-ctx draw-fn]
+    (canvas/add-entity mc (pce/make-monet-key ":xy-grid-bg") (rectangle graph-ctx "white"))
+    (canvas/add-entity mc (pce/make-monet-key ":xy-grid") (pce/xy-grid-new graph-ctx))))
+
+(defn draw-cartisian [mc margin bg-color]
+  (let [render-fn (->canvas mc margin bg-color)
+        graph (graph-wrapper mc)]
+    (render-fn (fn [] (graph (graph-context mc) nil)))))
 
 (defnc sandbox []
   (let [monet-canvas (hooks/use-ref nil)
-        [graph set-graph] (hooks/use-state {:width 400
-                                            :height 400
+        [graph set-graph] (hooks/use-state {:width 800
+                                            :height 900
                                             :points? true
                                             :lines? true
                                             :background? true
-                                            :dino? true})
+                                            :dino? false})
         make-toggle (partial make-toggle-button graph set-graph)]
 
     (hooks/use-effect [graph]
