@@ -3,7 +3,7 @@
             [helix.dom :as d]
             [helix.hooks :as hooks]
             [monet.canvas :as canvas]
-            [pbranes.canvas.cartisian :refer [->canvas cartisian-center-wrapper]]
+[pbranes.canvas.cartisian :refer [->canvas cartisian-center-wrapper add-axis add-grid-marks-new]]
             [pbranes.canvas.entities :as pce :refer [plot-points! plot-polygon! rectangle]]
             [pbranes.component.canvas :refer [canvas-component]]
             [pbranes.canvas.graph-tools :as gt]))
@@ -41,36 +41,42 @@
         make-cartisian (cartisian-center-wrapper mc)]
     (render-fn (fn [] (make-cartisian graph-ctx draw-fn)))))
 
-(defn calc-spacing [mc domain range margin]
-  (let [chart-width (gt/get-chart-dimension mc margin false)
-        chart-height (gt/get-chart-dimension mc margin true)
-        x-spacing (gt/get-spacing chart-width (count domain))
-        y-spacing (gt/get-spacing chart-height (count range))]
-    (min x-spacing y-spacing)))
-
 (defn graph-context [mc]
   (let [margin 50
         coord-radius 4.7
-        domain (range 6 -40 -1)
-        range (range 6 -50 -1)
-        vert-lines ( count domain )
-        horiz-lines (count range)
-        spacing (calc-spacing mc domain range margin)
-        width  (-> domain (count) (* spacing) )
-        height (-> range (count) (* spacing))]
-    {:x 0 :y 0
-     :w width :h height
+        domain (into [] (range 0 11 1)) ;; must add one more number to the end to get that value
+        range (into [] (range 10 -1 -1))
+        vert-lines (+ 1 (count domain ))
+        horiz-lines (+ 1 (count range))
+        spacing (gt/calc-spacing mc vert-lines horiz-lines margin)
+        width  (* vert-lines spacing )
+        height (* horiz-lines spacing)]
+    {:x 0
+     :y 0
+     :w width
+     :h height
      :margin margin
+     :domain domain
+     :range range
      :coord-radius coord-radius
-     :partitions (count domain)
-     :vert-lines vert-lines :horiz-lines horiz-lines
+     :vert-lines vert-lines
+     :horiz-lines horiz-lines
      :spacing spacing}
     ))
 
 (defn graph-wrapper [mc]
   (fn [graph-ctx draw-fn]
-    (canvas/add-entity mc (pce/make-monet-key ":xy-grid-bg") (rectangle graph-ctx "white"))
-    (canvas/add-entity mc (pce/make-monet-key ":xy-grid") (pce/xy-grid-new graph-ctx))))
+    (canvas/add-entity mc (pce/make-monet-key ":xy-grid-bg") (rectangle graph-ctx "cyan"))
+    (canvas/add-entity mc (pce/make-monet-key ":xy-grid") (pce/xy-grid-new graph-ctx))
+    (add-axis mc graph-ctx)
+    (add-grid-marks-new mc graph-ctx)
+    ))
+
+(comment 
+  (def domain (into [] (range 6 -5 -1)))
+  (prn (.indexOf domain -3))
+  (map #(js/console.log %) domain)
+  )
 
 (defn draw-cartisian [mc margin bg-color]
   (let [render-fn (->canvas mc margin bg-color)
@@ -79,8 +85,8 @@
 
 (defnc sandbox []
   (let [monet-canvas (hooks/use-ref nil)
-        [graph set-graph] (hooks/use-state {:width 800
-                                            :height 900
+        [graph set-graph] (hooks/use-state {:width 600
+                                            :height 800
                                             :points? true
                                             :lines? true
                                             :background? true

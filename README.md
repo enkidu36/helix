@@ -8,6 +8,7 @@ The programs in this book are in Python and I using it to learn how mostly pract
 
 # Chapter 2
 ![alt dino chart](dino-chart.png "Dino Chart")
+![alt dynamic chart](dynamic-chart.png "Dynamic Chart")
 
 NOTES:
 Sometime drawing to a canvas locks up a brower from the drawing loop.  Powershell commands

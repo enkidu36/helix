@@ -1,6 +1,7 @@
 (ns pbranes.canvas.cartisian
   (:require
    [monet.canvas :as canvas]
+   [pbranes.canvas.graph-tools :as gt]
    [pbranes.canvas.entities :as pce :refer [line rectangle text xy-grid]]))
 
 
@@ -23,11 +24,29 @@
       (canvas/add-entity mc (str :y_grid_marks (gensym)) (text {:text (- (+ 1 partitions) i) :x 0 :y (* i y-spacing) :vert? true}))
       (recur (inc i)))))
 
+(defn add-grid-marks-new [mc {:keys [h domain range spacing]}]
+  (js/console.log domain)
+  (loop [i 0 position 1]
+    (when (< i (count domain))
+      (canvas/add-entity mc (pce/make-monet-key "x_grid-marks") (text {:text (nth domain i)  :x  (* position spacing) :y h}))
+      (recur (inc i) (inc position))))
+  (loop [i 0 position 1]
+    (when (< i (count range))
+      (canvas/add-entity mc (pce/make-monet-key "y_grid_marks") (text {:text (nth range i) :x 0 :y (* position spacing) :vert? true}))
+      (recur (inc i) (inc position)))))
+
 (defn add-center-axis [mc {:keys [x y w h]}]
   (let [ctr-x (Math/floor (/ w 2))
         ctr-y (Math/floor (/ h 2))]
     (canvas/add-entity mc :y-axis (line [ctr-x y] [ctr-x h] 2 "yellow"))
     (canvas/add-entity mc :x-axis (line [x ctr-y] [w ctr-y] 2 "yellow"))))
+
+(defn add-axis [mc {:keys [x y w h spacing domain range]} ]
+  (let [x-pos (* spacing (+ 1 (.indexOf domain 0)))
+        y-pos (* spacing (+ 1 (.indexOf range 0)))]
+    (canvas/add-entity mc :y-axis (line [x-pos y] [x-pos h] 2 "yellow"))
+    (canvas/add-entity mc :x-axis (line [x y-pos] [w y-pos] 2 "yellow"))))
+
 
 (defn cartisian-center-wrapper [mc]
   (fn [graph-ctx draw-fn]

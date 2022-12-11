@@ -10,6 +10,13 @@
 (defn calc-graph-points [points graph-ctx]
   (map #(calc-graph-pt % graph-ctx) points))
 
+(defn adj-neg-numbers
+  "Helps to align numbers with negative sign to grid lines"
+  [ctx val]
+  (if (and (not (:vert? ctx))  (clojure.string/includes? (str (:text val)) "-"))
+    4
+    0))
+
 (defn start-translate-entity [translate]
   (canvas/entity
    translate
@@ -88,7 +95,7 @@
           (canvas/fill)
           (canvas/restore))))))
 
-(defn draw-line [ctx {:keys [x1 y1 x2 y2] }]
+(defn draw-line [ctx {:keys [x1 y1 x2 y2]}]
   (-> ctx
       (canvas/save)
       (canvas/begin-path)
@@ -137,18 +144,21 @@
    {:text text :x x :y y}
    nil
    (fn [ctx val]
-     (-> ctx
-         (canvas/save)
-         (canvas/fill-style "yellow")
-         (canvas/font-style "16px serif")
-         (canvas/text-baseline "middle")
-         (canvas/text-align "center")
-         (canvas/text (if vert?
-                        (-> val (assoc :x (- (:x val) 24)))
-                        (-> val (assoc :y (+ (:y val) 24)))))
-         (canvas/restore)))))
+     (let [align (if vert? "right" "center")]
+       (-> ctx
+           (canvas/save)
+           (canvas/fill-style "yellow")
+           (canvas/font-style "16px serif")
+           (canvas/text-baseline "middle")
+           (canvas/text-align align)
+           (canvas/text (if vert?
+                          (-> val (assoc :x (- (:x val) 24)))
+                          (-> val
+                              (assoc :y (+ (:y val) 24))
+                              (assoc :x (- (:x val) (adj-neg-numbers ctx val))))))
+           (canvas/restore))))))
 
-(defn plot-points! 
+(defn plot-points!
   ([pts r] (plot-points! pts r "black"))
   ([pts r color]
    (canvas/entity
@@ -164,7 +174,7 @@
             (canvas/fill)
             (canvas/restore)))))))
 
-(defn calc-polygon-segments 
+(defn calc-polygon-segments
   "Transforms a list of points to a list of line segments connecting the points in the list.
     [[0 0] [4 0] [4 3]] --> [[[0 0] [4 0]] [[4 0] [4 3]] [[4 3] [0 0]]]"
   [points]
@@ -186,9 +196,7 @@
       [[4 3] [0 0]]] (calc-polygon-segments points))
   (= [[[0 0] [0 0]]] (calc-polygon-segments one-pt))
   (= (calc-polygon-segments nil) nil)
-  (= (calc-polygon-segments []) nil)
-  
-  ,)
+  (= (calc-polygon-segments []) nil))
 
 (defn plot-polygon! [pts]
   (canvas/entity
