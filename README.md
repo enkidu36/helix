@@ -9,7 +9,7 @@ The programs in this book are in Python and I using it to learn how mostly pract
 # Chapter 2
 ![alt dino chart](dino-chart.png "Dino Chart")
 
-
+More dynamic chart allows for differenct domains and ranges.
 ![alt dynamic chart](dynamic-chart.PNG "Dynamic Chart")
 
 NOTES:
