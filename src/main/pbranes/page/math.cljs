@@ -1,4 +1,4 @@
-(ns pbranes.page.sandbox
+(ns pbranes.page.math
   (:require [helix.core :refer [$ <> defnc]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
@@ -83,7 +83,7 @@
         graph (graph-wrapper mc)]
     (render-fn (fn [] (graph (graph-context mc) nil)))))
 
-(defnc sandbox []
+(defnc math []
   (let [monet-canvas (hooks/use-ref nil)
         [graph set-graph] (hooks/use-state {:width 600
                                             :height 800
