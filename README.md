@@ -3,10 +3,9 @@
 
 Development sandbox for multiple projects
 
-# Cron Expression Dashboard
+# Dynamic gantt chart
 
-Sandbox to develop graphical displays of Cron expressions
-
+![alt dynamic gantt chart](general-dynamic.PNG)
 # Math for Programmers Sandbox
 
 Working through chapters and excecises in [Math for Programmers](https://www.manning.com/books/math-for-programmers?utm_source=google&utm_medium=cpc&utm_campaign=dynamicremarketing&gclid=EAIaIQobChMI_Lb1466v6AIVkkZeCh1HuwuNEAEYASACEgLgkvD_BwE)
@@ -25,3 +24,5 @@ NOTES:
 Sometime drawing to a canvas locks up a brower from the drawing loop.  Powershell commands
 1. netstat -ano | findstr <PORT>
 2. taskkill /PID <PID> /f
+
+

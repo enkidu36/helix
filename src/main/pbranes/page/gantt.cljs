@@ -72,8 +72,8 @@
   (d/div {:class "chart-wrapper"}
          (d/div {:style {:display "flex" :text-align "center" :font-size "18px" :font-weight "bold" :border-bottom "1px solid white" :padding-bottom "16px"}}
                 "File times - Color coded by source"
-                (d/div {:class "chart-legend"} "PBraneCo")
-                (d/div {:class "chart-legend" :style {:background-color "red"}} "Violux")
+                (d/div "PBraneCo")
+                (d/div { :style {:background-color "red"}} "Violux")
                 (d/div {:class "chart-legend" :style {:background-color "green"}} "InsuraCare"))
          ($ time-comp {:values x-values})
          ($ tasks-comp {:tasks tasks})))

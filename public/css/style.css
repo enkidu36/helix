@@ -68,6 +68,30 @@ body {
   height: 1000px;
 }
 
+/* CHART-LEGEND
+---------------------------------------------------*/
+.chart-legend {
+  /* display: flex;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom 1px solid white-space;
+  padding-bottom: 16px; */
+}
+
+.chart-wrapper div div {
+  margin-left: 10px;
+  min-width: 100px;
+  padding: 5px 10px 0px 10px;
+  text-align: center;
+  border-radius: 20px;
+  background-color: orange;
+  color: var(--white);
+  text-align: center;
+  font-size: 10px;
+}
+
+
 /* CHART-VALUES
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
