@@ -6,6 +6,15 @@ Development sandbox for multiple projects
 # Dynamic gantt chart
 
 ![alt dynamic gantt chart](general-dynamic.PNG)
+
+# WebGl
+
+[WebGl](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)
+
+Working through the WebGl 3D grapics tutorial
+![First Tutorial](webgl_1.PNG)
+
+
 # Math for Programmers Sandbox
 
 Working through chapters and excecises in [Math for Programmers](https://www.manning.com/books/math-for-programmers?utm_source=google&utm_medium=cpc&utm_campaign=dynamicremarketing&gclid=EAIaIQobChMI_Lb1466v6AIVkkZeCh1HuwuNEAEYASACEgLgkvD_BwE)

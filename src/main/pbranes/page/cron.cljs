@@ -18,7 +18,7 @@
     (hooks/use-effect
      []
      :once
-     (make-remote-call "http://localhost:3000/cron/converter?expression=helloooooooo" (fn [data] (set-state assoc :value data))))
+     (make-remote-call "http://localhost:3000/cron/converter?expression=hello world" (fn [data] (set-state assoc :value data))))
 
     (d/div (:value state))))
 

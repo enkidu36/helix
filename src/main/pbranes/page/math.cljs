@@ -3,7 +3,7 @@
             [helix.dom :as d]
             [helix.hooks :as hooks]
             [monet.canvas :as canvas]
-[pbranes.canvas.cartisian :refer [->canvas cartisian-center-wrapper add-axis add-grid-marks-new]]
+            [pbranes.canvas.cartisian :refer [->canvas cartisian-center-wrapper add-axis add-grid-marks-new]]
             [pbranes.canvas.entities :as pce :refer [plot-points! plot-polygon! rectangle]]
             [pbranes.component.canvas :refer [canvas-component]]
             [pbranes.canvas.graph-tools :as gt]))
@@ -24,7 +24,7 @@
     {:x 0 :y 0 :w width :h height :margin margin :coord-radius coord-radius :partitions partitions :n n :x-spacing x-spacing :y-spacing y-spacing}))
 
 (defn get-background-color [background?]
-  (if background? "rgba(80, 80, 80, 1.0)" "rgba(80, 80, 80, 0.0)"))
+  (if background? "rgba(70, 80, 80, 1.0)" "rgba(80, 80, 80, 0.0)"))
 
 (defn draw [controls]
   (fn [mc graph-ctx]
@@ -46,10 +46,10 @@
         coord-radius 4.7
         domain (into [] (range 0 11 1)) ;; must add one more number to the end to get that value
         range (into [] (range 10 -1 -1))
-        vert-lines (+ 1 (count domain ))
+        vert-lines (+ 1 (count domain))
         horiz-lines (+ 1 (count range))
         spacing (gt/calc-spacing mc vert-lines horiz-lines margin)
-        width  (* vert-lines spacing )
+        width  (* vert-lines spacing)
         height (* horiz-lines spacing)]
     {:x 0
      :y 0
@@ -61,22 +61,19 @@
      :coord-radius coord-radius
      :vert-lines vert-lines
      :horiz-lines horiz-lines
-     :spacing spacing}
-    ))
+     :spacing spacing}))
 
 (defn graph-wrapper [mc]
   (fn [graph-ctx draw-fn]
     (canvas/add-entity mc (pce/make-monet-key ":xy-grid-bg") (rectangle graph-ctx "cyan"))
     (canvas/add-entity mc (pce/make-monet-key ":xy-grid") (pce/xy-grid-new graph-ctx))
     (add-axis mc graph-ctx)
-    (add-grid-marks-new mc graph-ctx)
-    ))
+    (add-grid-marks-new mc graph-ctx)))
 
-(comment 
+(comment
   (def domain (into [] (range 6 -5 -1)))
   (prn (.indexOf domain -3))
-  (map #(js/console.log %) domain)
-  )
+  (map #(js/console.log %) domain))
 
 (defn draw-cartisian [mc margin bg-color]
   (let [render-fn (->canvas mc margin bg-color)

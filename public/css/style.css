@@ -47,8 +47,10 @@ body {
   color: yellow;
 }
 
-.canvas {
-  background-color: yellow;
+
+.glcanvas {
+  width: 640px;
+  height: 480px;
 }
 
 /*  Gantt chart styles */

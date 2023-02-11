@@ -7,7 +7,8 @@
             [pbranes.page.home :refer [home]]
             [pbranes.page.math :refer [math]]
             [pbranes.page.cron :refer [cron-page]]
-            [pbranes.page.gantt :refer [gantt-page]]))
+            [pbranes.page.gantt :refer [gantt-page]]
+            [pbranes.page.webgl :refer [webgl-page]]))
 
 (defnc layout []
   (d/div {:class "wrapper"}
@@ -16,7 +17,8 @@
                           ($ rr/Link {:to "/"} "Home")
                           ($ rr/Link {:to "/math"} "Math Sandbox")
                           ($ rr/Link {:to "/cron"} "Cron Dashboard")
-                          ($ rr/Link {:to "/gant"} "Gantt Chart Prototype")))
+                          ($ rr/Link {:to "/gant"} "Gantt Chart Prototype")
+                          ($ rr/Link {:to "/webgl"} "WebGl Tutorial")))
          (d/div {:class "main"} ($ rr/Outlet))
          (d/footer {:class "footer"} "footer")))
 
@@ -26,7 +28,8 @@
         ($ rr/Route {:path "/" :element ($ home)})
         ($ rr/Route {:path "/math" :element ($ math)})
         ($ rr/Route {:path "/cron" :element ($ cron-page)})
-        ($ rr/Route {:path "/gant" :element ($ gantt-page)}))))
+        ($ rr/Route {:path "/gant" :element ($ gantt-page)})
+        ($ rr/Route {:path "/webgl" :element ($ webgl-page)}))))
 
 (defnc app []
   ($ rr/BrowserRouter

@@ -9,6 +9,7 @@
  [[lilactown/helix "0.1.8"]
   [rm-hull/monet "0.3.0"]
   [cljs-http "0.1.46"]
+  [thi.ng/geom "1.0.0"]
   ]
 
  :dev-http {9000 "public"}
