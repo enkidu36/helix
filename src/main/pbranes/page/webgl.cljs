@@ -1,24 +1,32 @@
 (ns pbranes.page.webgl
-  (:require (helix.core :refer [defnc])
-            (helix.dom :as d)
-            (helix.hooks :as hooks)
-            (pbranes.webgl.init-buffers :refer [init-buffers])
-            (pbranes.webgl.draw-scene :refer [draw-scene])))
+  (:require [helix.core :refer [defnc]]
+            [helix.dom :as d]
+            [helix.hooks :as hooks]
+            [pbranes.webgl.init-buffers :refer [init-buffers]]
+            [pbranes.webgl.draw-scene :refer [draw-scene]]))
 
 (def vs-source
   "
     attribute vec4 aVertexPosition;
+    attribute vec4 aVertexColor;
+   
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
+   
+    varying lowp vec4 vColor;
+   
     void main() {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      vColor = aVertexColor;
     }
   ")
 
 (def fs-source
   "
+    varying lowp vec4 vColor;
+   
     void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+      gl_FragColor = vColor;
     }
   ")
 
@@ -54,9 +62,16 @@
       (js/alert (str "Unable to initialize the shader program " (.getProgramInfoLog shader-program)))
       shader-program)))
 
+;; Collect all the info needed to use the shader program.
+;; Look up which attributes or shader program is using
+;; for aVertexPosition, aVertexColor and also
+;; look up uniform locations.
 (defn program-info [gl shader-program]
   (clj->js {:program shader-program
-            :attribLocations {:vertexPosition (.getAttribLocation gl shader-program "aVertexPosition")}
+            
+            :attribLocations {:vertexPosition (.getAttribLocation gl shader-program "aVertexPosition")
+                              :vertexColor (.getAttribLocation gl shader-program "aVertexColor")}
+            
             :uniformLocations {:projectionMatrix (.getUniformLocation gl shader-program "uProjectionMatrix")
                                :modelViewMatrix (.getUniformLocation gl shader-program "uModelViewMatrix")}}))
 
@@ -86,8 +101,9 @@
     (hooks/use-effect
      []
      :once
-     (let [gl (.getContext (.-current glcanvas) "webgl")]
-       (main gl)))
+     (let [canvas (.-current glcanvas)
+           ctx (.getContext canvas "webgl")]
+       (main ctx)))
 
     (d/canvas {:ref glcanvas :class "glcanvas"})))
 

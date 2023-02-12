@@ -1,22 +1,41 @@
 (ns pbranes.webgl.draw-scene
   (:require [clojure.math :as math]
-            [pbranes.webgl.gl-attribs :refer [COLOR-BUFFER-BIT DEPTH-TEST DEPTH-BUFFER-BIT LEQUAL TRIANGLE-STRIP]]
+            [pbranes.webgl.gl-attribs :refer [ARRAY-BUFFER COLOR-BUFFER-BIT DEPTH-TEST DEPTH-BUFFER-BIT FLOAT LEQUAL TRIANGLE-STRIP]]
             [gl-matrix :refer [mat4]]))
 
 (set! *warn-on-infer* false)
 
 (defn set-position-attribute [gl buffers program-info]
   (let [num-components 2 ;; pull out 2 values per iteration
-        type (. gl -FLOAT) ;; the data in the buffer is 32bit foats
+        type (FLOAT gl) ;; the data in the buffer is 32bit foats
         normalize false ;; don't normalize
         stride 0 ;; how many bites to get from one set of values to the next 0 = use type and num-components
         offset 0
         vertex-pos (.. program-info -attribLocations -vertexPosition)]
 
-    (.bindBuffer gl (. gl -ARRAY_BUFFER) (. buffers -position))
-    
+    (.bindBuffer gl (ARRAY-BUFFER gl) (. buffers -position))
+
     (.vertexAttribPointer gl vertex-pos num-components type normalize stride offset)
     (.enableVertexAttribArray gl vertex-pos)))
+
+(defn set-color-attribute [gl buffers program-info]
+  (let [num-components 4
+        type (FLOAT gl)
+        normalize false
+        stride 0
+        offset 0
+        vertex-color (.. program-info -attribLocations -vertexColor)]
+    (js/console.log program-info)
+    (.bindBuffer gl (ARRAY-BUFFER gl) (.-color buffers))
+    (.vertexAttribPointer gl
+                          vertex-color
+                          num-components
+                          type
+                          normalize
+                          stride
+                          offset)
+
+    (.enableVertexAttribArray gl (.. program-info -attribLocations -vertexColor))))
 
 (defn draw-scene [gl program-info buffers]
   (.clearColor gl 0.0 0.0 0.0 1.0) ;; Clear to black, fully opaque
@@ -51,7 +70,7 @@
     (.perspective mat4
                   projection-matrix
                   field-of-view aspect
-                  z-near 
+                  z-near
                   z-far)
 
     ;; Now move the drawing postion a bit to where we want to 
@@ -64,6 +83,8 @@
     ;; Tell WebGL how to pull out the positions from the position buffer
     ;; into the vertexPosition attribute
     (set-position-attribute gl buffers program-info)
+
+    (set-color-attribute gl buffers program-info)
 
     ;; Tell WebGL to use our program when drawing
     (.useProgram gl (.-program program-info))
