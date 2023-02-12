@@ -11,7 +11,7 @@ Development sandbox for multiple projects
 
 [WebGl](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)
 
-Working through the WebGl 3D grapics tutorial
+Working through the WebGl 3D graphics tutorial
 ![First Tutorial](webgl_1.PNG)
 
 ![Second Tutorial](webgl_color.PNG)
