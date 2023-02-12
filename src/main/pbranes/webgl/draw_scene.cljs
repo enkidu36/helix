@@ -1,5 +1,6 @@
 (ns pbranes.webgl.draw-scene
   (:require [clojure.math :as math]
+            [pbranes.webgl.gl-attribs :refer [COLOR-BUFFER-BIT DEPTH-TEST DEPTH-BUFFER-BIT LEQUAL TRIANGLE-STRIP]]
             [gl-matrix :refer [mat4]]))
 
 (set! *warn-on-infer* false)
@@ -18,10 +19,10 @@
     (.enableVertexAttribArray gl vertex-pos)))
 
 (defn draw-scene [gl program-info buffers]
-  (.clearColor gl 2.0 0.0 0.0 1.0) ;; Clear to black, fully opaque
+  (.clearColor gl 0.0 0.0 0.0 1.0) ;; Clear to black, fully opaque
   (.clearDepth gl 1.0) ;; Clear everything
   (.enable gl (. gl -DEPTH_TEST)) ;; Enable depth testing
-  (.depthFunc gl (.-LEQUAL gl))
+  (.depthFunc gl (LEQUAL gl))
 
   ;; Clear the canvas before we start drawing on it.
   (.clear gl (bit-or (.-COLOR_BUFFER_BIT gl) (.-DEPTH_BUFFER_BIT gl)))
@@ -71,7 +72,7 @@
     (.uniformMatrix4fv gl (.. program-info -uniformLocations -projectionMatrix) false projection-matrix)
     (.uniformMatrix4fv gl (.. program-info -uniformLocations -modelViewMatrix) false model-view-matrix)
 
-    (.drawArrays gl (.-TRIANGLE_STRIP gl) offset vertex-count)))
+    (.drawArrays gl (TRIANGLE-STRIP gl) offset vertex-count)))
 
 
 
