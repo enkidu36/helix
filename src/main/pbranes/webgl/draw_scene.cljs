@@ -1,6 +1,6 @@
 (ns pbranes.webgl.draw-scene
   (:require [clojure.math :as math]
-            [pbranes.webgl.gl-attribs :refer [ARRAY-BUFFER COLOR-BUFFER-BIT DEPTH-TEST DEPTH-BUFFER-BIT FLOAT LEQUAL TRIANGLE-STRIP]]
+            [pbranes.webgl.gl-attribs :refer [ARRAY-BUFFER FLOAT LEQUAL TRIANGLE-STRIP]]
             [gl-matrix :refer [mat4]]))
 
 (set! *warn-on-infer* false)
@@ -25,7 +25,6 @@
         stride 0
         offset 0
         vertex-color (.. program-info -attribLocations -vertexColor)]
-    (js/console.log program-info)
     (.bindBuffer gl (ARRAY-BUFFER gl) (.-color buffers))
     (.vertexAttribPointer gl
                           vertex-color
@@ -37,7 +36,7 @@
 
     (.enableVertexAttribArray gl (.. program-info -attribLocations -vertexColor))))
 
-(defn draw-scene [gl program-info buffers]
+(defn draw-scene [gl program-info buffers square-rotation]
   (.clearColor gl 0.0 0.0 0.0 1.0) ;; Clear to black, fully opaque
   (.clearDepth gl 1.0) ;; Clear everything
   (.enable gl (. gl -DEPTH_TEST)) ;; Enable depth testing
@@ -78,7 +77,13 @@
     (.translate mat4
                 model-view-matrix ;; destination matrix
                 model-view-matrix ;; matrix to translate
-                (clj->js [-0.0 0.0 -6.0])) ;; amount to translate
+                (clj->js [-0.0 -1.0 -6.0])) ;; amount to translate
+    
+    (.rotate mat4
+             model-view-matrix ;; destination matrix
+             model-view-matrix ;; matrix to rotate
+             @square-rotation ;; amount to rotate in radians
+             (clj->js [0 0 1])) ;; axis to rotate around
 
     ;; Tell WebGL how to pull out the positions from the position buffer
     ;; into the vertexPosition attribute

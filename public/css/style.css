@@ -73,12 +73,12 @@ body {
 /* CHART-LEGEND
 ---------------------------------------------------*/
 .chart-legend {
-  /* display: flex;
+  display: flex;
   text-align: center;
   font-size: 18px;
   font-weight: bold;
   border-bottom 1px solid white-space;
-  padding-bottom: 16px; */
+  padding-bottom: 16px;
 }
 
 .chart-wrapper div div {

@@ -1,5 +1,5 @@
 (ns pbranes.page.webgl
-  (:require [helix.core :refer [defnc]]
+  (:require [helix.core :refer [defnc <>]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
             [pbranes.webgl.init-buffers :refer [init-buffers]]
@@ -68,13 +68,15 @@
 ;; look up uniform locations.
 (defn program-info [gl shader-program]
   (clj->js {:program shader-program
-            
+
             :attribLocations {:vertexPosition (.getAttribLocation gl shader-program "aVertexPosition")
                               :vertexColor (.getAttribLocation gl shader-program "aVertexColor")}
-            
+
             :uniformLocations {:projectionMatrix (.getUniformLocation gl shader-program "uProjectionMatrix")
                                :modelViewMatrix (.getUniformLocation gl shader-program "uModelViewMatrix")}}))
 
+(def square-rotation (atom 0.0))
+(def delta-time (atom 0))
 
 (defn main [gl]
 
@@ -86,24 +88,32 @@
 
   (let [shader-program (init-shader-program gl vs-source fs-source)
         buffers (init-buffers gl)
-        program-info (program-info gl shader-program)]
-
-    ;; (js/console.log "shader prog" shader-program)
-    ;; (js/console.log "init buffers" buffers)
-    ;; (js/console.log "program infoooo" program-info)
-    ;; (js/console.log "gl" gl)
-    ;; (js/console.log "draw") 
-    (draw-scene gl program-info buffers)))
-
+        program-info (program-info gl shader-program)
+        then (atom 0)
+        render (fn render [now]
+                 (let [now-s (* now 0.001)]
+                   (reset! delta-time (- now-s @then))
+                   (reset! then now-s)
+                   (draw-scene gl program-info buffers square-rotation)
+                   (reset! square-rotation (+ @square-rotation @delta-time))
+                   (js/requestAnimationFrame render)))]
+    (js/requestAnimationFrame render)))
 
 (defnc webgl-page []
-  (let [glcanvas (hooks/use-ref nil)]
+  (let [glcanvas (hooks/use-ref nil)
+        paragraph (hooks/use-ref nil)]
     (hooks/use-effect
      []
      :once
      (let [canvas (.-current glcanvas)
-           ctx (.getContext canvas "webgl")]
+           ctx (.getContext canvas "webgl")
+           check-txt (if (instance? js/WebGLRenderingContext ctx) "Congrats! You browser suports WebGL" "Failed. You browser does not support WebGL.")]
+       (set! (.. paragraph -current -textContent) check-txt)
        (main ctx)))
 
-    (d/canvas {:ref glcanvas :class "glcanvas"})))
+    (<>
+     (d/div {:style {:padding 50 :text-align "center"}}
+            (d/p {:ref paragraph} "[ Here would go the results of WebGL feature detection ]"))
+     (d/canvas {:ref glcanvas :class "glcanvas"}
+               "You browser does not support canvas"))))
 
