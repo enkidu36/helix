@@ -2,6 +2,7 @@
   (:require [helix.core :refer [defnc <>]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
+            [pbranes.webgl.constants :refer [COMPILE-STATUS VERTEX-SHADER FRAGMENT-SHADER LINK-STATUS COLOR-BUFFER-BIT]]
             [pbranes.webgl.init-buffers :refer [init-buffers]]
             [pbranes.webgl.draw-scene :refer [draw-scene]]))
 
@@ -43,22 +44,22 @@
     (.compileShader gl shader)
 
     ; See if it compiled successfully
-    (if (not (.getShaderParameter gl shader (.-COMPILE_STATUS gl)))
+    (if (not (.getShaderParameter gl shader COMPILE-STATUS))
       (do
         (js/alert (str "An erro occurred compiling the shaders:" (.getShaderInfoLog gl shader)))
         (.deleteShader shader))
       shader)))
 
 (defn init-shader-program [gl vs-source fs-source]
-  (let [vs (load-shader gl (. gl -VERTEX_SHADER) vs-source)
-        fs (load-shader gl (. gl -FRAGMENT_SHADER) fs-source)
+  (let [vs (load-shader gl VERTEX-SHADER vs-source)
+        fs (load-shader gl FRAGMENT-SHADER fs-source)
         shader-program (. gl createProgram)]
 
     (.attachShader gl shader-program vs)
     (.attachShader gl shader-program fs)
     (.linkProgram gl shader-program)
 
-    (if (not (.getProgramParameter gl shader-program (.-LINK_STATUS gl)))
+    (if (not (.getProgramParameter gl shader-program LINK-STATUS))
       (js/alert (str "Unable to initialize the shader program " (.getProgramInfoLog shader-program)))
       shader-program)))
 
@@ -76,6 +77,7 @@
                                :modelViewMatrix (.getUniformLocation gl shader-program "uModelViewMatrix")}}))
 
 (def square-rotation (atom 0.0))
+(def cube-rotation (atom 0.0))
 (def delta-time (atom 0))
 
 (defn main [gl]
@@ -84,7 +86,7 @@
     (js/alert "Unable to initialize WebGL. Your browser or machine may not support it."))
 
   (.clearColor gl 0.0 0.0 0.0 0.0)
-  (.clear gl (.-COLOR_BUFFER_BIT gl))
+  (.clear gl COLOR-BUFFER-BIT)
 
   (let [shader-program (init-shader-program gl vs-source fs-source)
         buffers (init-buffers gl)
@@ -94,8 +96,8 @@
                  (let [now-s (* now 0.001)]
                    (reset! delta-time (- now-s @then))
                    (reset! then now-s)
-                   (draw-scene gl program-info buffers square-rotation)
-                   (reset! square-rotation (+ @square-rotation @delta-time))
+                   (draw-scene gl program-info buffers cube-rotation)
+                   (reset! cube-rotation (+ @cube-rotation @delta-time))
                    (js/requestAnimationFrame render)))]
     (js/requestAnimationFrame render)))
 
