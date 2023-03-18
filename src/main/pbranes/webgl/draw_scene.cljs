@@ -43,7 +43,6 @@
   (.depthFunc gl LEQUAL)
 
   ;; Clear the canvas before we start drawing on it.
-  (.clear gl (bit-or (.-COLOR_BUFFER_BIT gl) (.-DEPTH_BUFFER_BIT gl)))
 
   ;; Create a perspective matrix, a special matrix that is 
   ;; used to simutalte the distortion of perspective in a camera
